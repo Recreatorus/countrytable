@@ -4,7 +4,7 @@ document.documentElement.classList.add((()=>(/Mobile|Android|iPhone|iPad/i.test(
       <td>${i(entry.area)}</td>
       <td>${i(j(entry.density,1))}</td>
       <td>${i(j(entry.gdp2023,1))}</td>
-      <td>${i(j(entry.gdppc2023,1))}</td>
-      <td>${i(j(entry.gdpppppc2023,1))}</td>
+      <td>${i(j(entry.gdppc2023,0))}</td>
+      <td>${i(j(entry.gdpppppc2023,0))}</td>
       <td>${i(j(entry.growthgdp2023,1))}</td>
     `;h.append(aI)}l()}function l(){const aJ=document.getElementById('sortMe'),aK=aJ.querySelectorAll('th'),aL=aJ.querySelector('tbody'),_D=aL.querySelectorAll('tr');var _E=[...aK].map(header=>''),_f=function(aM,aN){const aO=aK[aM].getAttribute('data-type');switch(aO) {case 'number':return parseFloat(aN);case 'string':default:return aN}},_g=function(aP){const aQ=_E[aP]||'asc',aR=aQ==='asc'?1:-1,aS=[..._D];aS.sort((aT,aU)=>{const a=_f(aP,aT.querySelectorAll('td')[aP].innerHTML.replaceAll('\&nbsp;','')),b=_f(aP,aU.querySelectorAll('td')[aP].innerHTML.replaceAll('\&nbsp;',''));switch(!0) {case a>b:return 1*aR;case a<b:return -1*aR;case a===b:return 0}});[].forEach.call(_D,function(aV){aL.removeChild(aV)});_E[aP]=aQ==='asc'?'desc':'asc';for(const aW of aS)aL.appendChild(aW)};[].forEach.call(aK,function(aX,aY){aX.addEventListener('click',function(){_g(aY)})})}var m=document.querySelectorAll('#sortMe th');[].forEach.call(m,function(el){el.addEventListener('click',function(){[].forEach.call(m,function(aZ){aZ.classList.remove('active')});el.classList.add('active')})});function N(bA){for(const bB of bA)if(!(bB>='a'&&bB<='z')&&!(bB>='A'&&bB<='Z'))return!1;return!0}document.addEventListener('readystatechange',function(){document.readyState==='complete'&&o.init()});document.getElementById('year').innerHTML=new Date().getFullYear();
