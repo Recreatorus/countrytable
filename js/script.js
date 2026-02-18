@@ -1,10 +1,175 @@
-document.documentElement.classList.add((()=>(/Mobile|Android|iPhone|iPad/i.test(navigator.userAgent)?'mobile':'desktop'))());var A=document.querySelector('.network'),c=document.querySelector('.theme-toggle'),d=()=>{const D=!c.matches('[aria-pressed=true]');c.setAttribute('aria-pressed',D);_.dataset.theme=D?'light':'dark'},h=(n,aE=0)=>+`${Math.round(`${n}e${aE}`)}e-${aE}`,m=(function(bB){let bC;function bD(e){bC=e.target;let bF=l(bC.value);!bF?document.querySelector('.input-wrapper').classList.add('user-invalid'):document.querySelector('.input-wrapper').classList.remove('user-invalid');bB.forEach.call(document.getElementsByClassName(bC.getAttribute('data-table')),function(bG){bB.forEach.call(bG.tBodies,function(bH){bB.forEach.call(bH.rows,bE)})})}function bE(bI){let bJ=bI.textContent.toLowerCase();bI.style.display=bJ.indexOf(bC.value.toLowerCase())===-1?'none':'table-row'}return{init:function(){bB.forEach.call(document.getElementsByClassName('light-table-filter'),function(bK){bK.oninput=bD})}}})(Array.prototype);window.addEventListener('offline',()=>A.classList.add('offline'));window.addEventListener('online',()=>A.classList.remove('offline'));var _=document.documentElement;(C=>{if(!window.matchMedia)return;var _b=window.matchMedia('(prefers-color-scheme: dark)');C(_b.matches)})(_a=>_a?_.setAttribute('data-theme','dark'):_.setAttribute('data-theme','light'));c.addEventListener('click',(()=>{!document.startViewTransition&&d();document.startViewTransition(d)}));window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',_A=>_.dataset.theme=_A.matches?'dark':'light');B().then(E=>I(E));async function B(){var aA=await fetch('https://recreatorus.github.io/countryinfo/data/countries.json',{priority:'high'});var _B=await aA.json();var _c=_B.map(({country:aB,pop2024:aC,area:_C,density:_d,gdp2024:_e,gdppc2024:F,gdpppppc2024:G,growthgdp2024:H})=>({country:aB,pop2024:aC,area:_C,density:_d,gdp2024:_e,gdppc2024:F,gdpppppc2024:G,growthgdp2024:H}));return _c}var f=document.querySelector('tbody');function g(aD){return new Intl.NumberFormat('ru-RU').format(aD)}function I(aF){for(const entry of aF){var aG=document.createElement('tr');aG.innerHTML=`
-      <td>${entry.country}</td>
-      <td>${g(entry.pop2024)}</td>
-      <td>${g(entry.area)}</td>
-      <td>${g(h(entry.density,1))}</td>
-      <td>${g(h(entry.gdp2024,1))}</td>
-      <td>${g(h(entry.gdppc2024,0))}</td>
-      <td>${g(h(entry.gdpppppc2024,0))}</td>
-      <td>${g(entry.growthgdp2024).replace(',','.')}</td>
-    `;f.append(aG)}var aH=document.querySelectorAll('tbody td:nth-child(8)');for(const i of aH)i.innerHTML<0?i.style.color='red':+i.innerHTML===0?i.style.color='currentColor':i.style.color='green';j()}function j(){const aI=document.getElementById('sortMe'),aJ=aI.querySelectorAll('th'),aK=aI.querySelector('tbody'),_D=aK.querySelectorAll('tr');var _E=[...aJ].map(header=>''),_f=function(aL,aM){const aN=aJ[aL].getAttribute('data-type');switch(aN) {case 'number':return parseFloat(aM);case 'string':default:return aM}},_g=function(aO){const aP=_E[aO]||'asc',aQ=aP==='asc'?1:-1,aR=[..._D];aR.sort((aS,aT)=>{const a=_f(aO,aS.querySelectorAll('td')[aO].innerHTML.replaceAll('\&nbsp;','')),b=_f(aO,aT.querySelectorAll('td')[aO].innerHTML.replaceAll('\&nbsp;',''));switch(!0) {case a>b:return 1*aQ;case a<b:return -1*aQ;case a===b:return 0}});[].forEach.call(_D,function(aU){aK.removeChild(aU)});_E[aO]=aP==='asc'?'desc':'asc';for(const aV of aR)aK.appendChild(aV)};[].forEach.call(aJ,function(aW,aX){aW.addEventListener('click',function(){_g(aX)})})}var k=document.querySelectorAll('#sortMe th');[].forEach.call(k,function(el){el.addEventListener('click',function(){[].forEach.call(k,function(aY){aY.classList.remove('active')});el.classList.add('active')})});function l(aZ){for(const bA of aZ)if(!(bA>='a'&&bA<='z')&&!(bA>='A'&&bA<='Z'))return!1;return!0}document.addEventListener('readystatechange',function(){document.readyState==='complete'&&m.init()});document.getElementById('year').innerHTML=new Date().getFullYear();
+const detectDeviceType = () => (/Mobile|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop');
+document.documentElement.classList.add(detectDeviceType());
+const network = document.querySelector('.network');
+(window.addEventListener('offline', () => {
+  network.classList.add('offline');
+}),
+  window.addEventListener('online', () => {
+    network.classList.remove('offline');
+  }));
+const HTML = document.documentElement,
+  runColorMode = (e) => {
+    if (!window.matchMedia) return;
+    let t = window.matchMedia('(prefers-color-scheme: dark)');
+    e(t.matches);
+  };
+runColorMode((e) => {
+  e ? HTML.setAttribute('data-theme', 'dark') : HTML.setAttribute('data-theme', 'light');
+});
+const TOGGLE = document.querySelector('.theme-toggle'),
+  SWITCH = () => {
+    let e = !TOGGLE.matches('[aria-pressed=true]');
+    (TOGGLE.setAttribute('aria-pressed', e), (HTML.dataset.theme = e ? 'light' : 'dark'));
+  },
+  TOGGLE_THEME = () => {
+    (document.startViewTransition || SWITCH(), document.startViewTransition(SWITCH));
+  };
+async function fetchData() {
+  let e = await fetch('https://recreatorus.github.io/countryinfo/data/countries.json', { priority: 'high' }),
+    t = await e.json(),
+    r = t.map(
+      ({
+        country: e,
+        pop2026: t,
+        area: r,
+        density: n,
+        gdp2024: a,
+        gdppc2024: o,
+        gdpppppc2024: l,
+        growthgdp2024: c,
+      }) => ({
+        country: e,
+        pop2026: t,
+        area: r,
+        density: n,
+        gdp2024: a,
+        gdppc2024: o,
+        gdpppppc2024: l,
+        growthgdp2024: c,
+      }),
+    );
+  return r;
+}
+(TOGGLE.addEventListener('click', TOGGLE_THEME),
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    HTML.dataset.theme = e.matches ? 'dark' : 'light';
+  }),
+  fetchData().then((e) => addTableRows(e)));
+const tableBody = document.querySelector('tbody');
+function numberFormatter(e) {
+  return new Intl.NumberFormat('ru-RU').format(e);
+}
+const round = (e, t = 0) => Number(`${Math.round(`${e}e${t}`)}e-${t}`);
+function addTableRows(e) {
+  e.forEach((e) => {
+    let t = document.createElement('tr');
+    ((t.innerHTML = `
+      <td>${e.country}</td>
+      <td>${numberFormatter(e.pop2026)}</td>
+      <td>${numberFormatter(e.area)}</td>
+      <td>${numberFormatter(round(e.density, 1))}</td>
+      <td>${numberFormatter(round(e.gdp2024, 1))}</td>
+      <td>${numberFormatter(round(e.gdppc2024, 0))}</td>
+      <td>${numberFormatter(round(e.gdpppppc2024, 0))}</td>
+      <td>${numberFormatter(e.growthgdp2024).replace(',', '.')}</td>
+    `),
+      tableBody.append(t));
+  });
+  let t = document.querySelectorAll('tbody td:nth-child(8)');
+  (t.forEach((e) =>
+    e.innerHTML < 0
+      ? (e.style.color = 'red')
+      : 0 === Number(e.innerHTML)
+        ? (e.style.color = 'currentColor')
+        : (e.style.color = 'green'),
+  ),
+    sortTable());
+}
+function sortTable() {
+  let e = document.getElementById('sortMe'),
+    t = e.querySelectorAll('th'),
+    r = e.querySelector('tbody'),
+    n = r.querySelectorAll('tr'),
+    a = Array.from(t).map(function (e) {
+      return '';
+    }),
+    o = function (e, r) {
+      let n = t[e].getAttribute('data-type');
+      return 'number' === n ? parseFloat(r) : r;
+    },
+    l = function (e) {
+      let t = a[e] || 'asc',
+        l = 'asc' === t ? 1 : -1,
+        c = Array.from(n);
+      (c.sort(function (t, r) {
+        let n = t.querySelectorAll('td')[e].innerHTML.replace(/\&nbsp;/g, ''),
+          a = r.querySelectorAll('td')[e].innerHTML.replace(/\&nbsp;/g, ''),
+          c = o(e, n),
+          i = o(e, a);
+        switch (!0) {
+          case c > i:
+            return 1 * l;
+          case c < i:
+            return -1 * l;
+          case c === i:
+            return 0;
+        }
+      }),
+        [].forEach.call(n, function (e) {
+          r.removeChild(e);
+        }),
+        (a[e] = 'asc' === t ? 'desc' : 'asc'),
+        c.forEach(function (e) {
+          r.appendChild(e);
+        }));
+    };
+  [].forEach.call(t, function (e, t) {
+    e.addEventListener('click', function () {
+      l(t);
+    });
+  });
+}
+var els = document.querySelectorAll('#sortMe th');
+function checkAlphabets(e) {
+  for (let t of e) if (!(t >= 'a' && t <= 'z') && !(t >= 'A' && t <= 'Z')) return !1;
+  return !0;
+}
+[].forEach.call(els, function (e) {
+  e.addEventListener('click', function () {
+    ([].forEach.call(els, function (e) {
+      e.classList.remove('active');
+    }),
+      e.classList.add('active'));
+  });
+});
+const LightTableFilter = (function (e) {
+  let t;
+  function r(r) {
+    checkAlphabets((t = r.target).value)
+      ? document.querySelector('.input-wrapper').classList.remove('user-invalid')
+      : document.querySelector('.input-wrapper').classList.add('user-invalid');
+    let a = document.getElementsByClassName(t.getAttribute('data-table'));
+    e.forEach.call(a, function (t) {
+      e.forEach.call(t.tBodies, function (t) {
+        e.forEach.call(t.rows, n);
+      });
+    });
+  }
+  function n(e) {
+    let r = e.textContent.toLowerCase(),
+      n = t.value.toLowerCase();
+    e.style.display = -1 === r.indexOf(n) ? 'none' : 'table-row';
+  }
+  return {
+    init: function () {
+      let t = document.getElementsByClassName('light-table-filter');
+      e.forEach.call(t, function (e) {
+        e.oninput = r;
+      });
+    },
+  };
+})(Array.prototype);
+(document.addEventListener('readystatechange', function () {
+  'complete' === document.readyState && LightTableFilter.init();
+}),
+  (document.getElementById('year').innerHTML = new Date().getFullYear()));
